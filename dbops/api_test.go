@@ -4,11 +4,21 @@
 */
 package dbops
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestAddUser(t *testing.T) {
 	err := AddUser("du", "123")
 	if err != nil {
 		t.Errorf("增加用户出错：%s", err)
 	}
+}
+
+func TestDeleteUser(t *testing.T) {
+	err := DeleteUser("du", "123")
+	if err != nil {
+		t.Errorf("删除用户出错:%s", err)
+	}
+
 }
