@@ -5,6 +5,7 @@
 package dbops
 
 import (
+	"media/api"
 	"testing"
 )
 
@@ -23,26 +24,26 @@ func TestUserWorkFlow(t *testing.T) {
 }
 
 func clearTables() {
-	dbConn.Exec("truncate users")
-	dbConn.Exec("truncate video_info")
+	api.dbConn.Exec("truncate users")
+	api.dbConn.Exec("truncate video_info")
 }
 
 func TestAddUser(t *testing.T) {
-	err := AddUser("du", "123")
+	err := api.AddUser("du", "123")
 	if err != nil {
 		t.Errorf("增加用户出错：%s", err)
 	}
 }
 
 func TestGetUserCredential(t *testing.T) {
-	pwd, err := GetUserCredential("du")
+	pwd, err := api.GetUserCredential("du")
 	if err != nil && pwd != "123" {
 		t.Errorf("获取用户失败:%s", err)
 	}
 }
 
 func TestDeleteUser(t *testing.T) {
-	err := DeleteUser("du", "123")
+	err := api.DeleteUser("du", "123")
 	if err != nil {
 		t.Errorf("删除用户出错:%s", err)
 	}
@@ -56,7 +57,7 @@ func TestVideoWorkFlow(t *testing.T) {
 }
 
 func TestAddVideo(t *testing.T) {
-	vedio, err := AddVideo(1, "duvideo")
+	vedio, err := api.AddVideo(1, "duvideo")
 	if err != nil {
 		t.Errorf("增加视频信息失败:%s", err)
 	}
@@ -64,14 +65,14 @@ func TestAddVideo(t *testing.T) {
 }
 
 func TestGetVideoByVid(t *testing.T) {
-	_, err := GetVideoByVid(videoid)
+	_, err := api.GetVideoByVid(videoid)
 	if err != nil {
 		t.Errorf("获取视频信息失败:%s", err)
 	}
 }
 
 func TestDeleteVideo(t *testing.T) {
-	err := DeleteVideo(videoid)
+	err := api.DeleteVideo(videoid)
 	if err != nil {
 		t.Errorf("删除信息失败：%s", err)
 	}

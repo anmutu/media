@@ -7,13 +7,12 @@ package dbops
 import (
 	"database/sql"
 	"log"
-	"media/defs"
-	"media/util"
+	"media/api"
 	"time"
 )
 
 func AddUser(name string, pwd string) error {
-	ststIns, err := dbConn.Prepare("insert into users(login_name,pwd) value (?,?)")
+	ststIns, err := api.dbConn.Prepare("insert into users(login_name,pwd) value (?,?)")
 	if err != nil {
 		return err
 	}
@@ -26,7 +25,7 @@ func AddUser(name string, pwd string) error {
 }
 
 func GetUserCredential(name string) (string, error) {
-	stmtOut, err := dbConn.Prepare("select pwd from users where login_name=?")
+	stmtOut, err := api.dbConn.Prepare("select pwd from users where login_name=?")
 	if err != nil {
 		log.Printf("%s", err)
 		return "", err
@@ -42,7 +41,7 @@ func GetUserCredential(name string) (string, error) {
 }
 
 func DeleteUser(name string, pwd string) error {
-	stmtDel, err := dbConn.Prepare("delete from users where login_name=? and pwd=?")
+	stmtDel, err := api.dbConn.Prepare("delete from users where login_name=? and pwd=?")
 	if err != nil {
 		log.Printf("%s", err)
 	}
@@ -54,8 +53,8 @@ func DeleteUser(name string, pwd string) error {
 	return nil
 }
 
-func GetUser(name string) (*defs.User, error) {
-	stmtOut, err := dbConn.Prepare("select id,pwd from users where login_name=?")
+func GetUser(name string) (*api.User, error) {
+	stmtOut, err := api.dbConn.Prepare("select id,pwd from users where login_name=?")
 	if err != nil {
 		log.Printf("%s", err)
 	}
@@ -68,19 +67,19 @@ func GetUser(name string) (*defs.User, error) {
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
-	res := &defs.User{Id: id, LoginName: name, Pwd: pwd}
+	res := &api.User{Id: id, LoginName: name, Pwd: pwd}
 	defer stmtOut.Close()
 	return res, nil
 }
 
-func AddVideo(userid int, name string) (*defs.VideoInfo, error) {
-	vid, err := util.NewUUID()
+func AddVideo(userid int, name string) (*api.VideoInfo, error) {
+	vid, err := api.NewUUID()
 	if err != nil {
 		log.Printf("生成视频Id错误:%s", err)
 	}
 	t := time.Now()
 	ctime := t.Format("Jan 02 2006,15:04:05") //这里是golang语言的一个彩蛋。
-	stmtIns, err := dbConn.Prepare(`insert into video_info (id,author_id,name,display_ctime) values(?,?,?,?)`)
+	stmtIns, err := api.dbConn.Prepare(`insert into video_info (id,author_id,name,display_ctime) values(?,?,?,?)`)
 	if err != nil {
 		return nil, err
 	}
@@ -88,13 +87,13 @@ func AddVideo(userid int, name string) (*defs.VideoInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	res := &defs.VideoInfo{Id: vid, AuthorId: userid, Name: name, DisplayCtime: ctime}
-	defer dbConn.Close()
+	res := &api.VideoInfo{Id: vid, AuthorId: userid, Name: name, DisplayCtime: ctime}
+	defer api.dbConn.Close()
 	return res, nil
 }
 
-func GetVideoByVid(vid string) (*defs.VideoInfo, error) {
-	stmtOut, err := dbConn.Prepare("select * from video_info where vid=?")
+func GetVideoByVid(vid string) (*api.VideoInfo, error) {
+	stmtOut, err := api.dbConn.Prepare("select * from video_info where vid=?")
 	if err != nil {
 		log.Printf("获取视频信息出错%s", err)
 	}
@@ -105,13 +104,13 @@ func GetVideoByVid(vid string) (*defs.VideoInfo, error) {
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
-	defer dbConn.Close()
-	res := &defs.VideoInfo{Id: vid, AuthorId: aid, Name: name, DisplayCtime: ctime}
+	defer api.dbConn.Close()
+	res := &api.VideoInfo{Id: vid, AuthorId: aid, Name: name, DisplayCtime: ctime}
 	return res, nil
 }
 
 func DeleteVideo(vid string) error {
-	stmtDel, err := dbConn.Prepare("delete from video_info where id=?")
+	stmtDel, err := api.dbConn.Prepare("delete from video_info where id=?")
 	if err != nil {
 		log.Printf("删除视频信息失败:%s", err)
 	}
@@ -119,16 +118,16 @@ func DeleteVideo(vid string) error {
 	if err != nil {
 		return nil
 	}
-	defer dbConn.Close()
+	defer api.dbConn.Close()
 	return nil
 }
 
 func AddComment(aid int, vid string, content string) error {
-	id, err := util.NewUUID()
+	id, err := api.NewUUID()
 	if err != nil {
 		return err
 	}
-	stmtIns, err := dbConn.Prepare("insert into comments(id,author_id,video_id,content) value (?,?,?,?)")
+	stmtIns, err := api.dbConn.Prepare("insert into comments(id,author_id,video_id,content) value (?,?,?,?)")
 	if err != nil {
 		return err
 	}
@@ -136,6 +135,6 @@ func AddComment(aid int, vid string, content string) error {
 	if err != nil {
 		return err
 	}
-	defer dbConn.Close()
+	defer api.dbConn.Close()
 	return nil
 }

@@ -33,3 +33,8 @@ type Comment struct {
 	Author  string `json:"author"`
 	Content string `json:"content"`
 }
+
+type SimpleSession struct {
+	UserName string
+	TTL      int64
+}
