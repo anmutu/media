@@ -80,7 +80,7 @@ func AddVideo(userid int, name string) (*defs.VideoInfo, error) {
 	}
 	t := time.Now()
 	ctime := t.Format("Jan 02 2006,15:04:05") //这里是golang语言的一个彩蛋。
-	stmtIns, err := dbConn.Prepare(`insert into video_info (id,author_id,name,display_ctime) vaules(?,?,?,?)`)
+	stmtIns, err := dbConn.Prepare(`insert into video_info (id,author_id,name,display_ctime) values(?,?,?,?)`)
 	if err != nil {
 		return nil, err
 	}
@@ -118,6 +118,23 @@ func DeleteVideo(vid string) error {
 	_, err = stmtDel.Exec(vid)
 	if err != nil {
 		return nil
+	}
+	defer dbConn.Close()
+	return nil
+}
+
+func AddComment(aid int, vid string, content string) error {
+	id, err := util.NewUUID()
+	if err != nil {
+		return err
+	}
+	stmtIns, err := dbConn.Prepare("insert into comments(id,author_id,video_id,content) value (?,?,?,?)")
+	if err != nil {
+		return err
+	}
+	_, err = stmtIns.Exec(id, aid, vid, content)
+	if err != nil {
+		return err
 	}
 	defer dbConn.Close()
 	return nil
