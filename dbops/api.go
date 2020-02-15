@@ -24,7 +24,7 @@ func AddUser(name string, pwd string) error {
 }
 
 func GetUserCredential(name string) (string, error) {
-	stmtOut, err := dbConn.Prepare("select pwd from users where name=?")
+	stmtOut, err := dbConn.Prepare("select pwd from users where login_name=?")
 	if err != nil {
 		log.Printf("%s", err)
 		return "", err
