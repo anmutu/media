@@ -4,6 +4,6 @@
 */
 package main
 
-func main() {
-
-}
+const (
+	VIDEO_DIR = "./videos/"
+)
