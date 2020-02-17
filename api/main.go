@@ -2,36 +2,38 @@
   author='du'
   date='2020/2/15 21:20'
 */
-package api
+package main
 
 import (
 	"github.com/julienschmidt/httprouter"
+	"media/api/auth"
+	"media/api/handler"
 	"media/api/session"
 	"net/http"
 )
 
+//中间件handler结构体
 type middleWareHandler struct {
 	r *httprouter.Router
 }
 
+//构造函数
 func NewMiddleWareHandler(r *httprouter.Router) http.Handler {
 	m := middleWareHandler{}
 	m.r = r
 	return m
 }
 
+//结构体的方法
 func (m middleWareHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	//check session
-	//validateUserSession(r)
-
+	auth.ValidateUserSession(r)
 	m.r.ServeHTTP(w, r)
 }
 
 func RegisterHandlers() *httprouter.Router {
 	router := httprouter.New()
-
-	//router.POST("/user", CreateUser)
-
+	router.POST("/test", handler.Test)
+	router.POST("/user", handler.CreateUser)
 	return router
 }
 
