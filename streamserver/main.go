@@ -42,7 +42,7 @@ func NewMiddleWareHandler(r *httprouter.Router, count int) http.Handler {
 
 func RegisterHandlers() *httprouter.Router {
 	router := httprouter.New()
-	//router.GET("/video/:vid",StreamHandler)
+	router.GET("/video/:vid", StreamHandler)
 	//router.POST("/upload/:vid",UploadHandler)
 	return router
 }
