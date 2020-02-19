@@ -2,7 +2,7 @@
   author='du'
   date='2020/2/18 4:19'
 */
-package dpops
+package s_dbops
 
 //读取视频删除纪录表
 func ReadVideoDelRec(count int) ([]string, error) {

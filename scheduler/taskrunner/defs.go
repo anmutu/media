@@ -9,6 +9,9 @@ const (
 	READY2DISPATCH = "d"
 	READY2EXECUTE  = "e"
 	CLOSE          = "c"
+
+	//文件路径
+	VIDEO_PATH = "./videos/"
 )
 
 //控制传输的channel

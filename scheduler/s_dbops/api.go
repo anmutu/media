@@ -2,7 +2,7 @@
   author='du'
   date='2020/2/18 4:19'
 */
-package dpops
+package s_dbops
 
 func AddVideoDelRec(vid string) error {
 	stmtIns, err := dbConn.Prepare("insert into video_del_rec (video_id) values (?)")
