@@ -4,6 +4,7 @@
 */
 package taskrunner
 
+//runner的结构体
 type Runner struct {
 	Controller controlChan
 	Error      controlChan
@@ -14,6 +15,7 @@ type Runner struct {
 	Executor   fn
 }
 
+//runner的构造函数
 func NewRunner(size int, longlived bool, d fn, e fn) *Runner {
 	return &Runner{
 		Controller: make(chan string, 1), //这里要使用非阻塞带buffer的channel
@@ -26,7 +28,7 @@ func NewRunner(size int, longlived bool, d fn, e fn) *Runner {
 	}
 }
 
-//开始调度的函数
+//runner开始调度的函数
 func (r *Runner) startDispatch() {
 
 	defer func() {

@@ -29,3 +29,9 @@ func (w *Worker) startWork() {
 		}
 	}
 }
+
+func Start() {
+	runner := NewRunner(3, true, VideoClearDispatcher, VideoClearExecutor)
+	worker := NewWorker(3, runner)
+	go worker.startWork()
+}
