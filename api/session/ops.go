@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+//线程安全的一个map,这个是1.9以后才有的。
 var sessionMap *sync.Map
 
 func init() {
@@ -60,6 +61,7 @@ func IsSessionExpired(sid string) (string, bool) {
 	return "", true
 }
 
+//删除过期session
 func deleteExpiredSession(sid string) error {
 	sessionMap.Delete(sid)
 	if err := dbops.DeleteSession(sid); err != nil {

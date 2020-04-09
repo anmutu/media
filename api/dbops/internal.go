@@ -12,6 +12,8 @@ import (
 	"sync"
 )
 
+/*这里是有关session的相关操作*/
+
 func InsertSession(sid string, ttl int64, username string) error {
 	ttlstr := strconv.FormatInt(ttl, 10)
 	stmtIns, err := dbConn.Prepare("insert into sessions(session_id,TTL,login_name)values (?,?,?)")

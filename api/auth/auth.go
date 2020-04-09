@@ -11,6 +11,7 @@ import (
 	"net/http"
 )
 
+//X开头的是自定义的header
 var HEADER_FIELD_SESSION = "X-Session-Id"
 var HEADER_FIELD_UNAME = "X-User_Name"
 

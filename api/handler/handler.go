@@ -23,7 +23,7 @@ func Test(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 //创建用户，注意参数r是指针类型。
 func CreateUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	res, _ := ioutil.ReadAll(r.Body)
-	user := &defs.UserCredential{}
+	user := &defs.User{}
 
 	//序列化判断
 	if err := json.Unmarshal(res, user); err != nil {
@@ -32,13 +32,13 @@ func CreateUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 
 	//写入db判断
-	if err := dbops.AddUser(user.UserName, user.Pwd); err != nil {
+	if err := dbops.AddUser(user.LoginName, user.Pwd); err != nil {
 		response.SendErrorResponse(w, defs.ErrorDBError)
 		return
 	}
 
 	//正常情况
-	id := session.GenerateSessionId(user.UserName)
+	id := session.GenerateSessionId(user.LoginName)
 	signup := &defs.SignedUp{Success: true, SessionId: id}
 	if resp, err := json.Marshal(signup); err != nil {
 		response.SendErrorResponse(w, defs.ErrorInternalFaults)

@@ -5,7 +5,7 @@
 package defs
 
 type UserCredential struct {
-	UserName string `json:user_name`
+	UserName string `json:login_name`
 	Pwd      string `json:pwd`
 }
 

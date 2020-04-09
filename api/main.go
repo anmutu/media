@@ -26,6 +26,7 @@ func NewMiddleWareHandler(r *httprouter.Router) http.Handler {
 
 //结构体的方法
 func (m middleWareHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	//检查session，也就是检查其合法性
 	auth.ValidateUserSession(r)
 	m.r.ServeHTTP(w, r)
 }
