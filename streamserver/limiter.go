@@ -6,6 +6,12 @@ package main
 
 import "log"
 
+/*
+  1.这里是流控逻辑的实现。
+  2.可以看到用非常简短的代码实现了流控的逻辑。
+  3.其得益于golang的channel的机制了。
+*/
+
 func main() {
 
 }
