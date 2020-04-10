@@ -11,13 +11,13 @@ const (
 	CLOSE          = "c"
 
 	//文件路径
-	VIDEO_PATH = "./videos/"
+	VIDEO_PATH = "./video/"
 )
 
 //控制传输的channel
 type controlChan chan string
 
-//传输具体数据的channel
+//传输具体数据的channel,尚不清楚具体的类型，所以用"泛型"
 type dataChan chan interface{}
 
 //这里就是调度者dispatcher和执行者excutor了

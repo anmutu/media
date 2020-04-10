@@ -7,7 +7,7 @@ package taskrunner
 //runner的结构体
 type Runner struct {
 	Controller controlChan
-	Error      controlChan
+	Error      controlChan //这里实际上就是返回的close这个东西
 	Data       dataChan
 	dataSize   int
 	longLived  bool //是否是长期存活的一个runner,如果是则不回收资源
@@ -30,17 +30,18 @@ func NewRunner(size int, longlived bool, d fn, e fn) *Runner {
 
 //runner开始调度的函数
 func (r *Runner) startDispatch() {
-
+	//如果不是长驻则关闭
 	defer func() {
 		if !r.longLived {
 			close(r.Controller)
 			close(r.Data)
 			close(r.Error)
 		}
-	}()
+	}() //有这里的括号就表明是即时调用。
 
 	for {
 		select {
+		//当这个controller里信息写进来的时候就走到这个case里去
 		case c := <-r.Controller:
 			if c == READY2DISPATCH {
 				err := r.Dispatcher(r.Data)
@@ -55,7 +56,7 @@ func (r *Runner) startDispatch() {
 				if err != nil {
 					r.Error <- CLOSE
 				} else {
-					r.Controller <- READY2EXECUTE
+					r.Controller <- READY2DISPATCH
 				}
 			}
 		case e := <-r.Error:
@@ -69,6 +70,7 @@ func (r *Runner) startDispatch() {
 
 //开始
 func (r *Runner) startAll() {
+	//这里要先给个READY2DISPATCH，不然会一直卡在这里。
 	r.Controller <- READY2DISPATCH
 	r.startDispatch()
 }
