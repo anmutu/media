@@ -12,10 +12,6 @@ import "log"
   3.其得益于golang的channel的机制了。
 */
 
-func main() {
-
-}
-
 //结构体
 type ConnLimiter struct {
 	conncurrentConn int //当前连接数
