@@ -9,6 +9,10 @@ import (
 	"net/http"
 )
 
+/*
+   在http middleware中加入流控。
+*/
+
 func main() {
 	r := RegisterHandlers()
 	mh := NewMiddleWareHandler(r, 2)
@@ -21,23 +25,22 @@ type middleWareHandler struct {
 	l *ConnLimiter
 }
 
-//hijack
+//构造函数,count参数为流控值。
+func NewMiddleWareHandler(r *httprouter.Router, count int) http.Handler {
+	m := middleWareHandler{}
+	m.r = r
+	m.l = NewConnLimiter(count)
+	return m
+}
+
+//用hijack的方法
 func (m middleWareHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	//panic("implement me")
 	if !m.l.GetConn() {
 		SendErrorResponse(w, http.StatusTooManyRequests, "请求太多")
 		return
 	}
 	m.r.ServeHTTP(w, r)
 	defer m.l.RealseConn()
-}
-
-//构造函数
-func NewMiddleWareHandler(r *httprouter.Router, count int) http.Handler {
-	m := middleWareHandler{}
-	m.r = r
-	m.l = NewConnLimiter(count)
-	return m
 }
 
 func RegisterHandlers() *httprouter.Router {
